@@ -20,6 +20,7 @@ import com.palantir.conjure.examples.recipe.api.Recipe;
 import com.palantir.conjure.examples.recipe.api.RecipeErrors;
 import com.palantir.conjure.examples.recipe.api.RecipeName;
 import com.palantir.conjure.examples.recipe.api.UndertowRecipeBookService;
+import com.palantir.tokens.auth.BearerToken;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +36,7 @@ public final class RecipeBookResource implements UndertowRecipeBookService {
     }
 
     @Override
-    public Recipe getRecipe(RecipeName name) {
+    public Recipe getRecipe(BearerToken bt, RecipeName name) {
         com.palantir.logsafe.Preconditions.checkNotNull(name, "Recipe name must be provided.");
         checkIfRecipeExists(name);
 
@@ -43,17 +44,17 @@ public final class RecipeBookResource implements UndertowRecipeBookService {
     }
 
     @Override
-    public void createRecipe(Recipe createRecipeRequest) {
+    public void createRecipe(BearerToken bt, Recipe createRecipeRequest) {
         recipes.put(createRecipeRequest.getName(), createRecipeRequest);
     }
 
     @Override
-    public Set<Recipe> getAllRecipes() {
+    public Set<Recipe> getAllRecipes(BearerToken bt) {
         return new HashSet<>(recipes.values());
     }
 
     @Override
-    public void deleteRecipe(RecipeName name) {
+    public void deleteRecipe(BearerToken bt, RecipeName name) {
         checkIfRecipeExists(name);
         recipes.remove(name);
     }

@@ -46,6 +46,7 @@ services:
     name: Recipe Book
     package: com.palantir.conjure.examples.recipe.api
     base-path: /recipes
+    default-auth: cookie:test-cookie
     docs: |
       APIs for retrieving recipes
 

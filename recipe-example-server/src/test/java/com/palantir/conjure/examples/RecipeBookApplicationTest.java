@@ -34,6 +34,7 @@ import com.palantir.conjure.java.api.testing.Assertions;
 import com.palantir.conjure.java.client.config.ClientConfigurations;
 import com.palantir.conjure.java.client.jaxrs.JaxRsClient;
 import com.palantir.conjure.java.okhttp.NoOpHostEventsSink;
+import com.palantir.tokens.auth.BearerToken;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import java.nio.file.Paths;
@@ -57,14 +58,14 @@ public class RecipeBookApplicationTest {
 
     @Test
     public void getRecipeUsingInvalidName() {
-        Assertions.assertThatRemoteExceptionThrownBy(() -> client.getRecipe(RecipeName.of("doesNotExist")))
+        Assertions.assertThatRemoteExceptionThrownBy(() -> client.getRecipe(BearerToken.valueOf("dummy"), RecipeName.of("doesNotExist")))
                 .isGeneratedFromErrorType(RecipeErrors.RECIPE_NOT_FOUND);
     }
 
     @Test
     public void getRecipeWithBake() {
         RecipeName recipeName = RecipeName.of("baked potatoes");
-        Recipe recipe = client.getRecipe(recipeName);
+        Recipe recipe = client.getRecipe(BearerToken.valueOf("dummy"), recipeName);
         Recipe expectedRecipe = Recipe.of(
                 recipeName,
                 ImmutableList.of(
