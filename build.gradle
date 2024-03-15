@@ -7,8 +7,7 @@ buildscript {
     dependencies {
         classpath 'com.palantir.gradle.externalpublish:gradle-external-publish-plugin:1.11.0'
         classpath 'com.palantir.javaformat:gradle-palantir-java-format:1.0.1'
-        classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:1.25.0'
-        classpath 'com.palantir.baseline:gradle-baseline-java:2.49.2'
+        classpath 'com.palantir.gradle.consistentversions:gradle-consistent-versions:2.21.0'
         classpath 'com.palantir.gradle.conjure:gradle-conjure:4.27.0'
         classpath 'com.palantir.gradle.gitversion:gradle-git-version:0.12.3'
         classpath 'com.palantir.launchconfig:gradle-launch-config-plugin:1.2.0'
@@ -18,7 +17,6 @@ buildscript {
 
 apply plugin: 'com.palantir.external-publish'
 apply plugin: 'com.palantir.consistent-versions'
-apply plugin: 'com.palantir.baseline'
 apply plugin: 'com.palantir.git-version'
 
 allprojects {
@@ -36,9 +34,13 @@ configure(subprojects - project(':recipe-example-api')) {
     apply plugin: 'java'
     apply plugin: 'org.inferred.processors'
 
-    sourceCompatibility = 1.8
+    sourceCompatibility = 11
 
     tasks.withType(JavaCompile) {
         options.compilerArgs += ['-Werror']
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }

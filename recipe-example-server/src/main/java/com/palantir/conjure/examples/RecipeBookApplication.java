@@ -39,9 +39,6 @@ import javax.net.ssl.SSLContext;
 
 public final class RecipeBookApplication {
 
-    protected static final String KEY_STORE_PATH = "src/test/resources/certs/keystore.jks"; // password changeit
-    protected static final String TRUSTSTORE_PATH = "src/test/resources/certs/truststore.jks"; // password changeit
-
     private RecipeBookApplication() {
         // noop
     }
@@ -49,12 +46,8 @@ public final class RecipeBookApplication {
     public static void main(String[] _args) throws IOException {
         Configuration conf = ConfigurationLoader.load();
 
-        SslConfiguration sslConfig =
-                SslConfiguration.of(Paths.get(TRUSTSTORE_PATH), Paths.get(KEY_STORE_PATH), "changeit");
-        SSLContext sslContext = SslSocketFactories.createSslContext(sslConfig);
-
         Undertow server = Undertow.builder()
-                .addHttpsListener(conf.getPort(), conf.getHost(), sslContext)
+                .addHttpListener(conf.getPort(), conf.getHost())
                 .setHandler(Handlers.path()
                         .addPrefixPath(
                                 "api/",
@@ -62,7 +55,6 @@ public final class RecipeBookApplication {
                                         .services(RecipeBookServiceEndpoints.of(new RecipeBookResource(someRecipes())))
                                         .build()))
                 .build();
-
         server.start();
     }
 
